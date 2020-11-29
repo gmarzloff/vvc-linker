@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<head>
+    <title>VA Video Connect (VVC) Linker</title>
+    <link href="https://db.onlinewebfonts.com/c/16842c927f8ef77adc29f7c5e27929ca?family=GT+Pressura" rel="stylesheet" type="text/css"/>
+    <style>
+        body { 
+            background-color: rgba(36, 47, 62, 0.7);
+            font-family: "GT Pressura", sans-serif;
+        }
+
+        h1 { text-align:  center;
+             font-size: x-large;
+        }
+
+        h1 img {
+            width: 35px;
+            padding-right: 20px;
+        }
+        #content { 
+            background-color:white;
+            width: 450px;
+            
+            margin: 50px auto; 
+
+            border-radius: 2px;
+            box-shadow: 10px 10px 20px rgba(0,0,0,.2);
+        }
+
+        #content-text-container {
+            padding: 25px 40px 50px;
+        }
+
+        #content-text-container input[type=text] {
+            border: 1px solid #2473db;
+            margin: 8px 0;
+            width: 340px;
+            font: inherit;
+            vertical-align: middle;
+            border-radius: 2px;
+            padding: 4px 8px;
+            box-sizing: border-box;
+
+        }
+
+        #content-text-container input[type=text]:focus {
+            background-color:  rgba(208, 230, 255, 0.4);
+        }
+
+        table { margin: 0 auto;}
+        #go_container { text-align: center; padding: 20px;}
+
+        #go_button { 
+            background-color: #2473db;
+            height: 40px;
+            color: white;
+            font-size: large;
+            text-transform: uppercase;
+            font-family: 'GTPressuraLight', sans-serif;
+            padding: 8px 16px;
+            font: inherit;
+            font-weight: 700;
+            border-radius: 3px;
+            border: none;
+            width: auto;
+            height: auto;
+        }
+        
+        .input_label {
+            display: block;
+            margin-right: 16px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <div id="content">
+        
+        <div id="content-text-container">
+            <h1><img src="https://care.va.gov/vvc-app/v2/custom_configuration/modules/gather-info/assets/logo.png" />VA Video Connect (VVC) Linker</h1>
+            <hr />
+            <p>Generate the right URL to get to a VVC appointment with a patient who has a VA-issued iPad. 
+                If the patient's email address ends in @stlink.com, this person has a VA-issued device.
+            </p>
+            
+            <div class="input_label">Serial Number</div>
+            <input id="serial_number" name="serial_number" placeholder="Enter Serial Number" type="text" />
+            
+            <div class="input_label">Alias</div>
+            <input id="alias" name="alias" placeholder="Enter Alias" type="text" />
+            
+            <div class="input_label">PIN:</div>
+            <input id="pin" name="pin" placeholder="Enter conference PIN" type="text" />
+
+            <div id="go_container"><input id="go_button" name="go" type="button" value="LAUNCH VVC" /></div>
+        </div>
+    </div>
+
+    <script>
+        document.onload = function(){
+            
+            var conference = {
+                alias: "",
+                pin: "",
+                serial_number: ""
+            };
+
+            function generateURL(){
+                var base = "https://care.va.gov/vvc-app/?join=1&media=1&escalate=1";
+                var url = base;
+                return url + "&name=" + conference.serial_number + "&conference=" + conference.alias + "&pin=" + conference.pin + "#";
+            }
+
+            function launchVVC(){
+                window.location = generateURL();
+            }
+
+            function fieldsAreValid(){
+                if (isEmpty(document.getElementById("alias")) ||
+                isEmpty(document.getElementById("pin")) ||
+                isEmpty(document.getElementById("serial_number"))) {
+                    return false;
+                }
+                return true;
+            }
+
+            function setConferenceProperties(){
+                conference.alias = document.getElementById("alias").value;
+                conference.pin = document.getElementById("pin").value;
+                conference.serial_number = document.getElementById("serial_number").value;
+            }
+
+            function isEmpty(field) { return field.value.length == 0 }
+            
+            document.getElementById("go_button").onmouseup = function(e){
+                if(fieldsAreValid()){
+                    setConferenceProperties();
+                    launchVVC();
+                }else {
+                    alert("Error: All fields required");
+                }
+            }
+        }();
+
+        // https://care.va.gov/vvc-app/?name=&join=1&media=1&escalate=1&conference=PVTGG7CD9ZSMDG1@care.va.gov&pin=15789348#
+    </script>
+</body>
+</html>
